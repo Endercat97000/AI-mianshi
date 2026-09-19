@@ -1,0 +1,121 @@
+{
+  "reviewed_on": "2026-09-18",
+  "scope": "research and installation preparation; no upstream runtime installed or executed",
+  "repositories": [
+    {
+      "repository": "mtgibbs/claude-hiring-assistant",
+      "url": "https://github.com/mtgibbs/claude-hiring-assistant",
+      "reviewed_commit": "8eab920c0588c1c85008869215d2161b611d7e37",
+      "license_observation": "MIT",
+      "decision": "reference_only",
+      "installed": false,
+      "reviewed_files": [
+        "AI.md",
+        "CLAUDE.md",
+        ".claude/agents/fact-checker.md",
+        ".claude/agents/interview-prep.md",
+        ".claude/agents/interview-assessor.md",
+        ".org/example/rubrics/ic_rubric.md",
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "builtbybianca/resume-integrity-checker",
+      "url": "https://github.com/builtbybianca/resume-integrity-checker",
+      "reviewed_commit": "2e77020b88c175ee1a225efe6b2585e0dd03d1cb",
+      "license_observation": "not_found",
+      "decision": "reference_only",
+      "installed": false,
+      "reviewed_files": [
+        "README.md",
+        "requirements.txt",
+        "src/integrity_checker.py",
+        "tests/test_integrity.py"
+      ]
+    },
+    {
+      "repository": "akshayaad19/resume-reality-check",
+      "url": "https://github.com/akshayaad19/resume-reality-check",
+      "reviewed_commit": "e8e666629fde5eb8d2fecddaa72e551ca59248f3",
+      "license_observation": "not_found",
+      "decision": "reference_only",
+      "installed": false,
+      "reviewed_files": [
+        "README.md",
+        "requirements.txt",
+        "app/extraction.py",
+        "app/retrieval.py",
+        "app/judge.py",
+        "eval/run_eval.py"
+      ]
+    },
+    {
+      "repository": "Om236-bee/adaptive-ai-interviewer",
+      "url": "https://github.com/Om236-bee/adaptive-ai-interviewer",
+      "reviewed_commit": "21ec2c26d6d172f82f44f94c27172f3afb6c5533",
+      "license_observation": "data_only_apache_2_0_code_unclear",
+      "decision": "deferred",
+      "installed": false,
+      "reviewed_files": [
+        "README.md",
+        "backend/requirements.txt",
+        "backend/app/ml/irt.py",
+        "backend/app/ml/selector.py",
+        "backend/app/ml/candidate_state.py",
+        "data/LICENSE",
+        "data/README.md"
+      ]
+    },
+    {
+      "repository": "jennifer88huang/interview-skills",
+      "url": "https://github.com/jennifer88huang/interview-skills",
+      "reviewed_commit": "8f72957468e1a05225c20aaf7239dce514c181f7",
+      "license_observation": "readme_claims_mit_license_file_missing",
+      "decision": "adaptation_candidate",
+      "installed": false,
+      "reviewed_files": [
+        "README.md",
+        "INSTALL.md",
+        "SKILL.md",
+        "references/jd-parser.md",
+        "references/resume-parser.md",
+        "references/question-design.md",
+        "extensions/server.js"
+      ]
+    },
+    {
+      "repository": "ziggy-xzding/ResumeInterviewAnalyzer",
+      "url": "https://github.com/ziggy-xzding/ResumeInterviewAnalyzer",
+      "reviewed_commit": "5ef559216db2ff64f9d577e46914a031c73a5498",
+      "license_observation": "MIT",
+      "decision": "reference_only",
+      "installed": false,
+      "reviewed_files": [
+        "README.md",
+        "requirements.txt",
+        "Base/Ai/base/baseLlm.py",
+        "Base/Client/qwen.py",
+        "Analyzer/core/interviewAnalysis.py",
+        "Analyzer/prompt/insertviewPrompt.py",
+        "WorkFlow/base/baseWorkFlow.py",
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "ericwang915/interview-copilot",
+      "url": "https://github.com/ericwang915/interview-copilot",
+      "reviewed_commit": "81528e22361dc2802155472ffea27a1b1eee6f31",
+      "license_observation": "MIT",
+      "decision": "reference_only",
+      "installed": false,
+      "reviewed_files": [
+        "README.md",
+        "package.json",
+        "src/main/llm.js",
+        "src/main/openaiCompat.js",
+        "src/main/settings.js",
+        "LICENSE"
+      ]
+    }
+  ]
+}

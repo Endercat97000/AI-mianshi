@@ -1,0 +1,77 @@
+/* ============================================================
+   AI 面试工作台 · 复古粗野主义（Neo-Brutalism）设计令牌
+   直角 · 粗黑边 · 硬阴影 · 奶油纸张感
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  /* 纸张与表面 */
+  --page:      #f2efe6;       /* 奶油米白 */
+  --surface:   #fffdf5;       /* 卡片白 */
+  --surface-2: #e9e4d4;       /* 内嵌面板 */
+  --sidebar:   #fffdf5;
+
+  /* 墨色（文字 + 边框） */
+  --ink:       #141414;
+  --muted:     #5a5a52;
+  --faint:     #8a8a80;
+
+  /* 边框（硬黑） */
+  --border:    #141414;
+  --bw:        2px;           /* 边框粗细 */
+
+  /* 品牌绿（复古深绿） */
+  --brand:        #2d6a4f;
+  --brand-deep:   #1b4332;
+  --brand-pale:   #d8f3dc;
+  --brand-wash:   #e9f5ec;
+
+  /* 强调色（黄/红，复古撞色） */
+  --accent:      #e9c46a;    /* 复古黄 */
+  --danger:      #bc4749;
+  --danger-pale: #fde2e2;
+  --info:        #2b6cb0;
+  --info-pale:   #dbeafe;
+
+  /* 硬阴影（无模糊，直接偏移） */
+  --shadow:    4px 4px 0 var(--ink);
+  --shadow-sm: 2px 2px 0 var(--ink);
+  --shadow-lg: 6px 6px 0 var(--ink);
+  --shadow-brand: 4px 4px 0 var(--brand-deep);
+
+  /* 圆角：复古 = 0 */
+  --r: 0;
+  --r-sm: 0;
+  --r-lg: 0;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page:      #1a1a16;
+  --surface:   #24241e;
+  --surface-2: #2e2e26;
+  --sidebar:   #1f1f19;
+
+  --ink:       #f0ead6;
+  --muted:     #b8b09a;
+  --faint:     #807864;
+
+  --border:    #f0ead6;
+
+  --brand:        #74c69d;
+  --brand-deep:   #b7e4c7;
+  --brand-pale:   #1b4332;
+  --brand-wash:   #1d3a2d;
+
+  --accent:      #e9c46a;
+  --danger:      #ff8a8a;
+  --danger-pale: #3a2222;
+  --info:        #7fb3e8;
+  --info-pale:   #1d2f3f;
+
+  --shadow:    4px 4px 0 var(--ink);
+  --shadow-sm: 2px 2px 0 var(--ink);
+  --shadow-lg: 6px 6px 0 var(--ink);
+  --shadow-brand: 4px 4px 0 var(--brand-deep);
+}

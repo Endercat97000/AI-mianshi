@@ -1,0 +1,35 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# 环境变量与密钥
+.env
+.env.*
+!.env.example
+
+# 业务数据（数据库、简历原文、备份）
+data/
+output/
+*.db
+*.zip
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# 临时文件
+.playwright-cli/
+_*.py
+_*.ps1

@@ -1,0 +1,310 @@
+{
+  "package": "frontend-source-handoff",
+  "files": [
+    {
+      "path": "ai-interviewer/.env.example",
+      "bytes": 195,
+      "sha256": "0b71eab3155a30413214a1c541a03b60db916e7580ef8ad20ec992aac7d69bb2"
+    },
+    {
+      "path": "ai-interviewer/.gitignore",
+      "bytes": 239,
+      "sha256": "8d016b8fcdc86aa5d336256faa317983a46525b3333483811fb276b261f108e5"
+    },
+    {
+      "path": "ai-interviewer/backend/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ai-interviewer/backend/database.py",
+      "bytes": 2451,
+      "sha256": "4cca7e4a9d1128abdd554375b499a34f320c7c62d34863362bb20e74775408b8"
+    },
+    {
+      "path": "ai-interviewer/backend/interview_api.py",
+      "bytes": 16288,
+      "sha256": "f904605bd79c3ba79f472f98d882a26fa08952ef563d0650d880a0f2e7197510"
+    },
+    {
+      "path": "ai-interviewer/backend/interview_models.py",
+      "bytes": 4220,
+      "sha256": "0ee0097bb04f20099ce708229b3a8c49970fd3f87f7d0da5bb60c413d6e955b0"
+    },
+    {
+      "path": "ai-interviewer/backend/interview_service.py",
+      "bytes": 13384,
+      "sha256": "dd51ebf94a99cbd49d0a56ff8bad215fe28d458478883e1c089db63d3f348da4"
+    },
+    {
+      "path": "ai-interviewer/backend/main.py",
+      "bytes": 11184,
+      "sha256": "febfd017e1cebf9316e328b1491e541186df8b3a89da0dd711ceb0359b7c31af"
+    },
+    {
+      "path": "ai-interviewer/backend/migrations.py",
+      "bytes": 2404,
+      "sha256": "e2d067945d1959ceeef3b0f4fbd40566e3417fe552745ff7c7b24a66d876a79c"
+    },
+    {
+      "path": "ai-interviewer/backend/parsers.py",
+      "bytes": 2251,
+      "sha256": "572c59e1ece019d54b04cb59a499dd4f27fa0be353def0e6f4dd6de0b06c9e87"
+    },
+    {
+      "path": "ai-interviewer/backend/privacy.py",
+      "bytes": 444,
+      "sha256": "b13fedb55ea9547527a0fc4f7c51746b211fa04adfe2e82c316e23e27f4b9bba"
+    },
+    {
+      "path": "ai-interviewer/backend/providers/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ai-interviewer/backend/providers/base.py",
+      "bytes": 537,
+      "sha256": "8fd1403630d7b459496bfaa6efa4c76bc4a58677c2e37ffb198fad9e37c5f245"
+    },
+    {
+      "path": "ai-interviewer/backend/providers/openai_compatible.py",
+      "bytes": 4228,
+      "sha256": "f6a32d6ec2ff4df7629b2b616ba7d3de754daae0fbb8769401ca91a6aa75e500"
+    },
+    {
+      "path": "ai-interviewer/backend/requirements-dev.txt",
+      "bytes": 52,
+      "sha256": "9a4dc835db9e5ae8421b1fa0d187fb10521d8c76e33b8840b9e3a0874a837445"
+    },
+    {
+      "path": "ai-interviewer/backend/requirements-lock.txt",
+      "bytes": 497,
+      "sha256": "2be916d6c7ef0de2a581cdd01bf087d395af9195d82342d042d4a135dd7f3305"
+    },
+    {
+      "path": "ai-interviewer/backend/requirements.txt",
+      "bytes": 142,
+      "sha256": "acf172fd264a8ebf5c42c5b06688a450a939d0ba61493e32b9afd5d80e2a57c7"
+    },
+    {
+      "path": "ai-interviewer/backend/runtime_lock.py",
+      "bytes": 1241,
+      "sha256": "7f73f6fc8f8cd3cc94a7407ac45b661a985fd630df917099b03c8a23fac5f01b"
+    },
+    {
+      "path": "ai-interviewer/backend/schemas.py",
+      "bytes": 969,
+      "sha256": "c258eda4629ef158063cad4918107ebc020f348a1de6246ac061a0424fbf0729"
+    },
+    {
+      "path": "ai-interviewer/backend/secrets.py",
+      "bytes": 1777,
+      "sha256": "8bd84faac9abf4f69cd39f51542958167e96ed938360b07aba387618fa0fa4ef"
+    },
+    {
+      "path": "ai-interviewer/backend/skills.py",
+      "bytes": 934,
+      "sha256": "5f72a94f2743fc8c2a9e72ba1505d6812cc6e592ceeddf7e5f3fb5f35dcc1c04"
+    },
+    {
+      "path": "ai-interviewer/backend/tests/test_api.py",
+      "bytes": 5621,
+      "sha256": "dbc64f0fec02bc866d0ce227e1ea788fba1377877f9d32379f6b60d1ac8b2306"
+    },
+    {
+      "path": "ai-interviewer/backend/tests/test_interview.py",
+      "bytes": 24164,
+      "sha256": "004cfb24b43be843a5ac5d5f6907b6f93a4ac495b78e0c7c224f7e4a7eebcc3e"
+    },
+    {
+      "path": "ai-interviewer/data/candidates/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ai-interviewer/data/resumes/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ai-interviewer/docs/architecture.md",
+      "bytes": 4701,
+      "sha256": "526a4c97ec628a04f14bd642625e338a92685b3bf34fb90b4abb7bbe48a1bb5a"
+    },
+    {
+      "path": "ai-interviewer/docs/examples/陈亦舟-网页模拟报告.md",
+      "bytes": 33830,
+      "sha256": "f030027ce287b6204e759c4540e33919bb011f72c972253f32f95fb097697f9e"
+    },
+    {
+      "path": "ai-interviewer/docs/examples/陈亦舟-虚构简历.txt",
+      "bytes": 1661,
+      "sha256": "e036348a96882501daa6df7344bbba4813043f81067a9e810b46e1e93f1b9def"
+    },
+    {
+      "path": "ai-interviewer/docs/github-research.md",
+      "bytes": 14007,
+      "sha256": "19fab23c7df4531f0cef65a05eb04df038ab3c754f9ac8ca061223fda5107c23"
+    },
+    {
+      "path": "ai-interviewer/docs/handoff.md",
+      "bytes": 6393,
+      "sha256": "31d133ded90e3182827621d9171fa65dc46ad387f16de936f881b6caa57b03aa"
+    },
+    {
+      "path": "ai-interviewer/docs/installation-readiness.md",
+      "bytes": 5660,
+      "sha256": "c4bfedf843a9712a0dc39a49589a26d6669a478369e2d874a6f30cb5e7836aad"
+    },
+    {
+      "path": "ai-interviewer/docs/progress-report.md",
+      "bytes": 5011,
+      "sha256": "334331fbe3e5a2b15d5b086bf0ec41ec96924b0027f34cb91abec9db7d09b9a6"
+    },
+    {
+      "path": "ai-interviewer/docs/reference-repositories.json",
+      "bytes": 4098,
+      "sha256": "39c034efb5c57b2bb4a9ba1401ee8f08811a61564c0bbafba3cbd81b78dcdbfd"
+    },
+    {
+      "path": "ai-interviewer/docs/remaining-goals.md",
+      "bytes": 3907,
+      "sha256": "9a4be8640527f590cd1de64c6b87c9e8f13362a461c93fb2ba6a87fe346b9a87"
+    },
+    {
+      "path": "ai-interviewer/docs/ui-reference/dark-candidates.png",
+      "bytes": 61411,
+      "sha256": "33681cfc3f3aa2877e7ced1026ef7f8b7f9095a783f7aa70b4620e3889e59fa9"
+    },
+    {
+      "path": "ai-interviewer/docs/ui-reference/dark-opening.png",
+      "bytes": 95778,
+      "sha256": "101589c972c6dd71d86296a9c94d13e930f0dafda984b41847f2f3a2b7a0408f"
+    },
+    {
+      "path": "ai-interviewer/docs/verification-experience.md",
+      "bytes": 2463,
+      "sha256": "c9a06804bc9a45e33dce809a7fdc1ef5ae99ef29b8d69b6c79e0fc53a358103f"
+    },
+    {
+      "path": "ai-interviewer/docs/verification-p01.md",
+      "bytes": 3344,
+      "sha256": "af2eceeb48f403d154b86a742f0dfc01f9d9b26c3512394281cf64aa26ce098b"
+    },
+    {
+      "path": "ai-interviewer/docs/verification.md",
+      "bytes": 1526,
+      "sha256": "36adcc97ac586c15822ba19d2be8d531126fc15e0890eb4cc1fa7c538be4bf42"
+    },
+    {
+      "path": "ai-interviewer/docs/web-simulation.md",
+      "bytes": 4488,
+      "sha256": "bae93d8dd704a1e92e738e064423d5ce6e29cfea61d14c79c935d3836293ed28"
+    },
+    {
+      "path": "ai-interviewer/frontend/index.html",
+      "bytes": 564,
+      "sha256": "77239b4635cbf7a207933e8eb1395a7932cf0c301d2c99d2f687b63d36349284"
+    },
+    {
+      "path": "ai-interviewer/frontend/package-lock.json",
+      "bytes": 38116,
+      "sha256": "46ffd87f6ee8221e99babee1ff86794a43b99d8e1511f5c76a257a891487ff6f"
+    },
+    {
+      "path": "ai-interviewer/frontend/package.json",
+      "bytes": 417,
+      "sha256": "13109dcdf43ccc82577ef522dca89a83bb9d42dfce5e44585fa241f01d1cc377"
+    },
+    {
+      "path": "ai-interviewer/frontend/src/api.ts",
+      "bytes": 1181,
+      "sha256": "3f3725b3217c9c30e1179ca1ebc78a42223a3194297c9deb30d7a1a83d3b85fc"
+    },
+    {
+      "path": "ai-interviewer/frontend/src/BatchImport.tsx",
+      "bytes": 3863,
+      "sha256": "b070f523e86fc576e7cf6f75abdd8e247b344d21d9227ba5ecf88cfcda5505c5"
+    },
+    {
+      "path": "ai-interviewer/frontend/src/main.tsx",
+      "bytes": 15657,
+      "sha256": "9005f5abaf127f32990e31052307bc4d390b67cac435780a57f239c5682a1c4a"
+    },
+    {
+      "path": "ai-interviewer/frontend/src/style.css",
+      "bytes": 3740,
+      "sha256": "48d6a430335e67cebeb611e292da88c91b978aad17aa1d71d0de1229ce7275ef"
+    },
+    {
+      "path": "ai-interviewer/frontend/src/theme.css",
+      "bytes": 3325,
+      "sha256": "55a28e72190057aeebc07d740a4ece175d48dc4dd9f293f83e096e57955da7ee"
+    },
+    {
+      "path": "ai-interviewer/frontend/src/workflow.tsx",
+      "bytes": 19896,
+      "sha256": "978a85d3fd1f540ab0283d81769b841cdb97db854f18f299499b72c7338be4d8"
+    },
+    {
+      "path": "ai-interviewer/frontend/tsconfig.json",
+      "bytes": 259,
+      "sha256": "77fc240c57c76c7a6c377c5557343667ac78fef18389a5e7b0229b3714c742c6"
+    },
+    {
+      "path": "ai-interviewer/frontend/vite.config.ts",
+      "bytes": 193,
+      "sha256": "404e175ab1a030e115b1743cda74f5767087bc83cc9360ef8351ee639772c6b7"
+    },
+    {
+      "path": "ai-interviewer/FRONTEND_START_HERE.md",
+      "bytes": 5174,
+      "sha256": "cfa8b1502e32a1dd13b878ff38d6bee3af6aace6c8d9ca3ce7ba7d00b9e55e56"
+    },
+    {
+      "path": "ai-interviewer/README.md",
+      "bytes": 11960,
+      "sha256": "926206f3b76887096b5e328eaec4529c02c2da804b62acd1b134cdc6484111f7"
+    },
+    {
+      "path": "ai-interviewer/scripts/backup.py",
+      "bytes": 5688,
+      "sha256": "4fd6bf8ca14565acf415331dfc4ec0ae5028ca33923cb7bb157fdcb1eca7e9e0"
+    },
+    {
+      "path": "ai-interviewer/scripts/check_readiness.py",
+      "bytes": 3188,
+      "sha256": "7bac69982bc0a181ea11e21f924259f55114c7d08733873c804b7653ffd13579"
+    },
+    {
+      "path": "ai-interviewer/scripts/package_handoff.py",
+      "bytes": 2985,
+      "sha256": "c7ab48df24fe272898e7b01a238e3c015abe7c62cc31b1192163994bce238c76"
+    },
+    {
+      "path": "ai-interviewer/skills/competition-analysis/SKILL.md",
+      "bytes": 2284,
+      "sha256": "0d5faa7dbf92dc09f65b3c76236426830fbbd14b7df965d2fc9297926046bcd3"
+    },
+    {
+      "path": "ai-interviewer/skills/example/SKILL.md",
+      "bytes": 217,
+      "sha256": "75736ac600a3a215e9fc5defe9adad7594f87c26a7342760f3132caae19f2f88"
+    },
+    {
+      "path": "ai-interviewer/skills/project-requirement/SKILL.md",
+      "bytes": 540,
+      "sha256": "2a0dc05f9d4513269c9285404348b7eed38a27b7c8dfcd62adc63dcd114f730b"
+    },
+    {
+      "path": "ai-interviewer/skills/question-design/SKILL.md",
+      "bytes": 1545,
+      "sha256": "339cf6c9351ed104b77d2629ccec143e0b45d66b2d480b461cde1f20ac785170"
+    },
+    {
+      "path": "ai-interviewer/skills/roles-backend/SKILL.md",
+      "bytes": 399,
+      "sha256": "a88e879b6ebc13b7f6b7f6046d7be59c12067809cbdadd6e5755ffd6d6775dbd"
+    }
+  ]
+}
