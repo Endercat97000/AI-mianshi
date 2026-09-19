@@ -629,7 +629,7 @@ function App() {
     : route === '/settings' ? 'settings'
     : 'home';
 
-  return <div className="app-shell">
+  return <div className={'app-shell' + (collapsed?' shell-collapsed':'')}>
     <PixelField />
     <aside className={'sidebar' + (collapsed?' collapsed':'')}>
       <div className="logo">
