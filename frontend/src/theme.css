@@ -1,77 +1,87 @@
 /* ============================================================
-   AI 面试工作台 · 复古粗野主义（Neo-Brutalism）设计令牌
-   直角 · 粗黑边 · 硬阴影 · 奶油纸张感
+   AI 面试工作台 · Apple / iOS 风格设计令牌
+   圆角 · 毛玻璃 · 柔和层级阴影 · 系统字体
    ============================================================ */
 :root {
   color-scheme: light;
 
-  /* 纸张与表面 */
-  --page:      #f2efe6;       /* 奶油米白 */
-  --surface:   #fffdf5;       /* 卡片白 */
-  --surface-2: #e9e4d4;       /* 内嵌面板 */
-  --sidebar:   #fffdf5;
+  /* 背景与表面 */
+  --page:      #f5f5f7;       /* 苹果官网浅灰 */
+  --surface:   #ffffff;       /* 卡片白 */
+  --surface-2: #f0f0f2;       /* 内嵌面板 */
+  --sidebar:   rgba(245, 245, 247, 0.72); /* 毛玻璃侧栏 */
 
-  /* 墨色（文字 + 边框） */
-  --ink:       #141414;
-  --muted:     #5a5a52;
-  --faint:     #8a8a80;
+  /* 文字 */
+  --ink:       #1d1d1f;
+  --muted:     #6e6e73;
+  --faint:     #a1a1a6;
 
-  /* 边框（硬黑） */
-  --border:    #141414;
-  --bw:        2px;           /* 边框粗细 */
+  /* 边框（极细浅灰） */
+  --border:    #d2d2d7;
+  --bw:        1px;
 
-  /* 品牌绿（复古深绿） */
-  --brand:        #2d6a4f;
-  --brand-deep:   #1b4332;
-  --brand-pale:   #d8f3dc;
-  --brand-wash:   #e9f5ec;
+  /* 品牌色（苹果蓝为主操作，保留绿色作品牌/成功） */
+  --brand:        #0071e3;
+  --brand-deep:   #0058b0;
+  --brand-pale:   #e8f1fd;
+  --brand-wash:   #f4f9ff;
+  --brand-softer: #eef6ff;
 
-  /* 强调色（黄/红，复古撞色） */
-  --accent:      #e9c46a;    /* 复古黄 */
-  --danger:      #bc4749;
-  --danger-pale: #fde2e2;
-  --info:        #2b6cb0;
-  --info-pale:   #dbeafe;
+  /* 强调色 */
+  --accent:      #ffd60a;    /* iOS 黄 */
+  --danger:      #ff3b30;    /* iOS 红 */
+  --danger-pale: #ffeceb;
+  --success:     #34c759;    /* iOS 绿 */
+  --info:        #5ac8fa;    /* iOS 浅蓝 */
+  --info-pale:   #e9f8ff;
 
-  /* 硬阴影（无模糊，直接偏移） */
-  --shadow:    4px 4px 0 var(--ink);
-  --shadow-sm: 2px 2px 0 var(--ink);
-  --shadow-lg: 6px 6px 0 var(--ink);
-  --shadow-brand: 4px 4px 0 var(--brand-deep);
+  /* 柔和层级阴影 */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.05);
+  --shadow:    0 2px 8px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,.10), 0 4px 12px rgba(0,0,0,.06);
+  --shadow-brand: 0 4px 14px rgba(0,113,227,.28);
 
-  /* 圆角：复古 = 0 */
-  --r: 0;
-  --r-sm: 0;
-  --r-lg: 0;
+  /* 圆角 */
+  --r-sm: 8px;
+  --r:    12px;
+  --r-lg: 18px;
+  --r-pill: 980px;
+
+  /* 苹果风格动效曲线 */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.15, 1);
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --page:      #1a1a16;
-  --surface:   #24241e;
-  --surface-2: #2e2e26;
-  --sidebar:   #1f1f19;
+  --page:      #000000;
+  --surface:   #1c1c1e;
+  --surface-2: #2c2c2e;
+  --sidebar:   rgba(22, 22, 24, 0.72);
 
-  --ink:       #f0ead6;
-  --muted:     #b8b09a;
-  --faint:     #807864;
+  --ink:       #f5f5f7;
+  --muted:     #98989d;
+  --faint:     #636366;
 
-  --border:    #f0ead6;
+  --border:    #38383a;
 
-  --brand:        #74c69d;
-  --brand-deep:   #b7e4c7;
-  --brand-pale:   #1b4332;
-  --brand-wash:   #1d3a2d;
+  --brand:        #0a84ff;    /* iOS dark 蓝 */
+  --brand-deep:   #409cff;
+  --brand-pale:   #0a2540;
+  --brand-wash:   #0c1d33;
+  --brand-softer: #10294a;
 
-  --accent:      #e9c46a;
-  --danger:      #ff8a8a;
-  --danger-pale: #3a2222;
-  --info:        #7fb3e8;
-  --info-pale:   #1d2f3f;
+  --accent:      #ffd60a;
+  --danger:      #ff453a;
+  --danger-pale: #3a1d1c;
+  --success:     #30d158;
+  --info:        #64d2ff;
+  --info-pale:   #0c2f3d;
 
-  --shadow:    4px 4px 0 var(--ink);
-  --shadow-sm: 2px 2px 0 var(--ink);
-  --shadow-lg: 6px 6px 0 var(--ink);
-  --shadow-brand: 4px 4px 0 var(--brand-deep);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.4);
+  --shadow:    0 2px 8px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.4);
+  --shadow-brand: 0 4px 14px rgba(10,132,255,.35);
 }
