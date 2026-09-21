@@ -39,6 +39,7 @@ def initialize():
             name TEXT NOT NULL,
             role TEXT NOT NULL,
             notes TEXT NOT NULL DEFAULT '',
+            interview_date TEXT,
             created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
         CREATE TABLE IF NOT EXISTS resumes (

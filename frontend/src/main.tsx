@@ -250,12 +250,12 @@ function AppleSelect<T extends string | number>({ value, options, onChange, plac
   const [open, setOpen] = useState(false);
   const [hi, setHi] = useState(0);
   const rootRef = React.useRef<HTMLDivElement>(null);
-  const selectedIndex = Math.max(0, options.findIndex(o => o.value === value));
-  const current = options[selectedIndex];
+  const selectedIndex = options.findIndex(o => o.value === value);
+  const current = selectedIndex >= 0 ? options[selectedIndex] : undefined;
 
   React.useEffect(() => {
     if (!open) return;
-    setHi(selectedIndex);
+    setHi(selectedIndex >= 0 ? selectedIndex : 0);
     const onDown = (e: MouseEvent) => {
       if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
     };
@@ -433,6 +433,17 @@ function Dashboard() {
   useEffect(() => { void run(refresh); }, []);
   const totalCandidates = Object.values(candidateCounts).reduce((a, b) => a + b, 0);
 
+  // 从日历跳转时带 ?date=YYYY-MM-DD，仅显示当天安排面试的候选人
+  const readDate = () => new URLSearchParams(location.hash.split('?')[1] || '').get('date');
+  const [dateFilter, setDateFilter] = useState<string | null>(readDate);
+  useEffect(() => {
+    const onHash = () => setDateFilter(readDate());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+  const visibleCandidates = dateFilter ? allCandidates.filter(c => c.interview_date === dateFilter) : allCandidates;
+  const shownCount = dateFilter ? visibleCandidates.length : totalCandidates;
+
   return <>
     <div className="hero">
       <span className="eyebrow">工作台</span>
@@ -442,16 +453,24 @@ function Dashboard() {
 
     <DashboardUpload onDone={refresh} />
 
+    {dateFilter && <div className="cal-filter-bar">
+      <span>正在查看 <strong>{prettyDate(dateFilter).text}（{prettyDate(dateFilter).weekday}）</strong> 的面试安排 · {visibleCandidates.length} 位候选人</span>
+      <span className="cal-filter-actions">
+        <a className="button-link" href="#/calendar">返回日历</a>
+        <button type="button" className="secondary" onClick={() => { location.hash = '#/app'; }}>清除筛选</button>
+      </span>
+    </div>}
+
     <div className="stat-row">
       <div className="stat-card"><div className="num">{projects.length}</div><div className="lbl">项目 / 岗位</div></div>
-      <div className="stat-card"><div className="num">{totalCandidates}</div><div className="lbl">候选人</div></div>
+      <div className="stat-card"><div className="num">{shownCount}</div><div className="lbl">{dateFilter ? '当天候选人' : '候选人'}</div></div>
       <div className="stat-card"><div className="num">100%</div><div className="lbl">本地存储</div></div>
     </div>
 
-    <h2>候选人 <small>{allCandidates.length} 人</small></h2>
-    {!busy && !allCandidates.length && <p className="muted">还没有候选人，在上方上传一份简历即可自动创建。</p>}
+    <h2>{dateFilter ? '当天候选人' : '候选人'} <small>{visibleCandidates.length} 人{dateFilter ? ` · ${dateFilter}` : ''}</small></h2>
+    {!busy && !visibleCandidates.length && <p className="muted">{dateFilter ? '这一天没有安排候选人，可到日历页把候选人安排到这一天。' : '还没有候选人，在上方上传一份简历即可自动创建。'}</p>}
     <div className="candidate-grid">
-      {allCandidates.map(c => (
+      {visibleCandidates.map(c => (
         <article className="card candidate-tile" key={c.id}>
           <div className="avatar" aria-hidden="true">{c.name.slice(0, 1)}</div>
           <h3>{c.name}</h3>
@@ -784,6 +803,169 @@ function SettingsPage() {
 }
 
 /* ============================================================
+   面试日历（#/calendar）
+   月历标注每天安排的候选人；点某天可安排/移除，并跳转工作台按当天筛选
+   ============================================================ */
+const WEEK_CN = ['一', '二', '三', '四', '五', '六', '日'];
+const pad2 = (n: number) => String(n).padStart(2, '0');
+const keyOf = (y: number, m: number, d: number) => `${y}-${pad2(m + 1)}-${pad2(d)}`;
+function todayKey() { const t = new Date(); return keyOf(t.getFullYear(), t.getMonth(), t.getDate()); }
+function prettyDate(key: string) {
+  const [y, m, d] = key.split('-').map(Number);
+  const wd = WEEK_CN[(new Date(y, m - 1, d).getDay() + 6) % 7];
+  return { text: `${y} 年 ${m} 月 ${d} 日`, weekday: `周${wd}` };
+}
+type CalPerson = Candidate & { project_title?: string };
+type CalCell = { y: number; m: number; d: number; key: string; inMonth: boolean };
+
+function CalendarPage() {
+  const now = new Date();
+  const [people, setPeople] = useState<CalPerson[]>([]);
+  const [cursor, setCursor] = useState({ y: now.getFullYear(), m: now.getMonth() });
+  const [selected, setSelected] = useState(todayKey());
+  const [addId, setAddId] = useState(0);
+  const { busy, error, run } = useAction();
+
+  useEffect(() => { void run(async () => {
+    const projects = await api<Project[]>('/projects');
+    const all: CalPerson[] = [];
+    await Promise.all(projects.map(async p => {
+      try { (await api<Candidate[]>(`/projects/${p.id}/candidates`)).forEach(c => all.push({ ...c, project_title: p.title })); }
+      catch { /* ignore project */ }
+    }));
+    setPeople(all.sort((a, b) => a.id - b.id));
+  }); }, []);
+
+  async function schedule(c: CalPerson, date: string | null) {
+    await run(async () => {
+      const saved = await api<Candidate>(`/candidates/${c.id}`, json('PUT', {
+        project_id: c.project_id, name: c.name, role: c.role, notes: c.notes ?? '', interview_date: date,
+      }));
+      setPeople(prev => prev.map(p => p.id === c.id ? { ...p, interview_date: saved.interview_date } : p));
+    });
+  }
+
+  // 周一为一周起始，固定 6 行 × 7 列
+  const firstOffset = (new Date(cursor.y, cursor.m, 1).getDay() + 6) % 7;
+  const gridStart = new Date(cursor.y, cursor.m, 1 - firstOffset);
+  const cells: CalCell[] = Array.from({ length: 42 }, (_, i) => {
+    const d = new Date(gridStart); d.setDate(gridStart.getDate() + i);
+    return { y: d.getFullYear(), m: d.getMonth(), d: d.getDate(), key: keyOf(d.getFullYear(), d.getMonth(), d.getDate()), inMonth: d.getMonth() === cursor.m };
+  });
+  const byDate = useMemo(() => {
+    const map: Record<string, CalPerson[]> = {};
+    people.forEach(p => { if (p.interview_date) (map[p.interview_date] ||= []).push(p); });
+    return map;
+  }, [people]);
+  const tKey = todayKey();
+  const dayPeople = byDate[selected] || [];
+  const unscheduled = people.filter(p => !p.interview_date);
+  const sel = prettyDate(selected);
+
+  function pick(cell: CalCell) {
+    if (!cell.inMonth) setCursor({ y: cell.y, m: cell.m });
+    setSelected(cell.key);
+  }
+  function shiftMonth(delta: number) {
+    const d = new Date(cursor.y, cursor.m + delta, 1);
+    setCursor({ y: d.getFullYear(), m: d.getMonth() });
+  }
+
+  return <>
+    <div className="hero">
+      <span className="eyebrow">面试日历</span>
+      <h1>哪天面试谁，一目了然</h1>
+      <p>把候选人安排到具体日期，日历上会直接标注；点击某一天即可查看、调整当天的面试名单。</p>
+    </div>
+    <ErrorMessage text={error} />
+
+    <div className="calendar-layout">
+      <div className="card cal-card">
+        <div className="cal-toolbar">
+          <h2 className="cal-title">{cursor.y} 年 {cursor.m + 1} 月</h2>
+          <div className="cal-nav">
+            <button type="button" className="secondary" aria-label="上一月" onClick={() => shiftMonth(-1)}>‹</button>
+            <button type="button" className="secondary" onClick={() => { const t = new Date(); setCursor({ y: t.getFullYear(), m: t.getMonth() }); setSelected(todayKey()); }}>今天</button>
+            <button type="button" className="secondary" aria-label="下一月" onClick={() => shiftMonth(1)}>›</button>
+          </div>
+        </div>
+        <div className="cal-weekdays">
+          {WEEK_CN.map(w => <span key={w}>{w}</span>)}
+        </div>
+        <div className="cal-grid" role="grid" aria-busy={busy}>
+          {cells.map(cell => {
+            const list = byDate[cell.key] || [];
+            return <button type="button" key={cell.key}
+              className={`cal-cell${cell.inMonth ? '' : ' is-out'}${cell.key === selected ? ' is-selected' : ''}${cell.key === tKey ? ' is-today' : ''}`}
+              onClick={() => pick(cell)}>
+              <span className={`cal-num${cell.key === tKey ? ' today-dot' : ''}`}>{cell.d}</span>
+              {list.length > 0 && <span className="cal-chips">
+                {list.slice(0, 2).map(p => <span className="cal-chip" key={p.id}>{p.name}</span>)}
+                {list.length > 2 && <span className="cal-more">+{list.length - 2}</span>}
+              </span>}
+              {list.length === 0 && <span className="cal-dot" />}
+            </button>;
+          })}
+        </div>
+      </div>
+
+      <aside className="cal-side">
+        <div className="card cal-day">
+          <div className="cal-day-head">
+            <div>
+              <h3>{sel.text}</h3>
+              <p className="muted">{sel.weekday} · {dayPeople.length} 人面试</p>
+            </div>
+          </div>
+
+          {dayPeople.length === 0 && <p className="muted cal-empty">这一天还没有安排候选人。</p>}
+          <div className="cal-day-list">
+            {dayPeople.map(c => (
+              <div className="cal-day-item" key={c.id}>
+                <div className="avatar" aria-hidden="true">{c.name.slice(0, 1)}</div>
+                <div className="cal-day-info">
+                  <strong>{c.name}</strong>
+                  <span className="muted">{c.role} · {c.project_title}</span>
+                </div>
+                <div className="cal-day-actions">
+                  <a className="button-link" href={`#/projects/${c.project_id}/candidates/${c.id}`}>档案</a>
+                  <button type="button" className="secondary" disabled={busy} onClick={() => void schedule(c, null)}>移除</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="cal-add">
+            <AppleSelect<number>
+              value={addId}
+              placeholder="添加候选人到这一天…"
+              options={people.map(p => ({
+                value: p.id,
+                label: p.name,
+                hint: p.interview_date && p.interview_date !== selected
+                  ? `${p.role} · 已安排 ${p.interview_date.slice(5).replace('-', '/')}`
+                  : p.role,
+              }))}
+              onChange={id => {
+                setAddId(0);
+                const c = people.find(p => p.id === id);
+                if (c) void schedule(c, selected);
+              }}
+            />
+          </div>
+          <a className="button-link primary-link cal-goto" href={`#/app?date=${selected}`}>在工作台查看当天候选人 →</a>
+        </div>
+
+        <div className="card cal-meta">
+          <h3>待安排</h3>
+          <p className="muted">{unscheduled.length === 0 ? '所有候选人都已安排面试日期。' : `${unscheduled.length} 位候选人尚未安排日期：${unscheduled.slice(0, 6).map(p => p.name).join('、')}${unscheduled.length > 6 ? ' 等' : ''}。`}</p>
+        </div>
+      </aside>
+    </div>
+  </>;
+}
+
+/* ============================================================
    应用外壳：根据路由决定是否显示侧边栏
    ============================================================ */
 function App() {
@@ -794,9 +976,10 @@ function App() {
     try { localStorage.setItem('ai-interview-theme', dark ? 'dark' : 'light'); } catch { /* ignore */ }
   }, [dark]);
 
-  const [route, setRoute] = useState(location.hash.slice(1) || '/');
+  const currentPath = () => (location.hash.slice(1) || '/').split('?')[0];
+  const [route, setRoute] = useState(currentPath());
   useEffect(() => {
-    const change = () => setRoute(location.hash.slice(1) || '/');
+    const change = () => setRoute(currentPath());
     window.addEventListener('hashchange', change);
     return () => window.removeEventListener('hashchange', change);
   }, []);
@@ -812,6 +995,7 @@ function App() {
 
   const crumb = (() => {
     if (route === '/app') return ['工作台', '所有项目与候选人'];
+    if (route === '/calendar') return ['面试日历', '按日期安排与查看'];
     if (route.startsWith('/new/project')) return ['新建项目', '定义项目需求'];
     if (route.startsWith('/new/jd')) return ['新建岗位', '撰写岗位 JD'];
     if (route === '/settings') return ['设置', '模型与备份'];
@@ -823,6 +1007,7 @@ function App() {
   })();
 
   const activeItem = route === '/app' || route.startsWith('/new/') ? 'home'
+    : route === '/calendar' ? 'calendar'
     : route === '/skills' ? 'skills'
     : route === '/settings' ? 'settings'
     : 'home';
@@ -848,6 +1033,9 @@ function App() {
           </a>
           <a className={`nav-item ${activeItem === 'skills' ? 'active' : ''}`} href="#/skills">
             <span className="ico" aria-hidden="true">✎</span> 出题规则
+          </a>
+          <a className={`nav-item ${activeItem === 'calendar' ? 'active' : ''}`} href="#/calendar">
+            <span className="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M7.5 13.5h2M12 13.5h2M16.5 13.5h2M7.5 17h2M12 17h2"/></svg></span> 面试日历
           </a>
         </div>
         <div className="nav-group">
@@ -876,6 +1064,7 @@ function App() {
 
       <main className="content" key={route}>
         {route === '/app' ? <Dashboard />
+          : route === '/calendar' ? <CalendarPage />
           : route === '/new/project' ? <NewProject kind="project" />
           : route === '/new/jd' ? <NewProject kind="jd" />
           : route === '/settings' ? <SettingsPage />

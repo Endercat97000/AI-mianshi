@@ -35,3 +35,7 @@ def migrate(db):
     # A process restart must not leave an interrupted operation permanently locked.
     db.execute("UPDATE generations SET status='failed', error='服务重启中断了生成，请重新预览后重试。' WHERE status='pending'")
     db.execute("UPDATE sessions SET busy=0 WHERE busy=1")
+    # Interview scheduling: nullable local date (YYYY-MM-DD) shown on the calendar.
+    candidate_cols = {row[1] for row in db.execute("PRAGMA table_info(candidates)")}
+    if "interview_date" not in candidate_cols:
+        db.execute("ALTER TABLE candidates ADD COLUMN interview_date TEXT")

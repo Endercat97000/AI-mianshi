@@ -97,7 +97,7 @@ def candidates(project_id: int):
 def create_candidate(body: CandidateCreate):
     with connect() as db:
         require(db, "projects", body.project_id)
-        row_id = db.execute("INSERT INTO candidates(project_id,name,role,notes) VALUES(?,?,?,?)", (body.project_id, body.name, body.role, body.notes)).lastrowid
+        row_id = db.execute("INSERT INTO candidates(project_id,name,role,notes,interview_date) VALUES(?,?,?,?,?)", (body.project_id, body.name, body.role, body.notes, body.interview_date)).lastrowid
         return require(db, "candidates", row_id)
 
 @app.get("/api/candidates/{candidate_id}/resumes")
@@ -210,7 +210,7 @@ def edit_candidate(candidate_id: int, body: CandidateCreate):
             raise HTTPException(409, "请等待生成完成后再修改。")
         if db.execute("SELECT 1 FROM sessions s JOIN generations g ON g.id=s.generation_id WHERE g.candidate_id=? AND s.busy=1", (candidate_id,)).fetchone():
             raise HTTPException(409, "请等待面试分析完成后再修改。")
-        db.execute("UPDATE candidates SET name=?,role=?,notes=? WHERE id=?", (body.name, body.role, body.notes, candidate_id))
+        db.execute("UPDATE candidates SET name=?,role=?,notes=?,interview_date=? WHERE id=?", (body.name, body.role, body.notes, body.interview_date, candidate_id))
         return require(db, "candidates", candidate_id)
 
 @app.delete("/api/candidates/{candidate_id}")

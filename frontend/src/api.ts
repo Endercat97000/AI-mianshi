@@ -1,5 +1,5 @@
 export type Project = { id: number; kind: 'project' | 'jd'; title: string; description: string };
-export type Candidate = { id: number; project_id: number; name: string; role: string; notes: string; resume_count?:number; session_count?:number; latest_session_id?:number; latest_session_status?:string };
+export type Candidate = { id: number; project_id: number; name: string; role: string; notes: string; interview_date?: string | null; resume_count?:number; session_count?:number; latest_session_id?:number; latest_session_status?:string };
 export type Resume = { id: number; original_name: string; warning: string; text?: string };
 export type Settings = { provider: string; base_url: string; model: string; has_api_key: boolean };
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
