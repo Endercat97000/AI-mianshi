@@ -820,21 +820,41 @@ type CalCell = { y: number; m: number; d: number; key: string; inMonth: boolean 
 
 function CalendarPage() {
   const now = new Date();
+  const [projects, setProjects] = useState<Project[]>([]);
   const [people, setPeople] = useState<CalPerson[]>([]);
   const [cursor, setCursor] = useState({ y: now.getFullYear(), m: now.getMonth() });
   const [selected, setSelected] = useState(todayKey());
   const [addId, setAddId] = useState(0);
+  const [showCreate, setShowCreate] = useState(false);
+  const [projId, setProjId] = useState(0);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerYear, setPickerYear] = useState(now.getFullYear());
+  const pickerRef = React.useRef<HTMLDivElement>(null);
   const { busy, error, run } = useAction();
 
   useEffect(() => { void run(async () => {
-    const projects = await api<Project[]>('/projects');
+    const ps = await api<Project[]>('/projects');
+    setProjects(ps);
     const all: CalPerson[] = [];
-    await Promise.all(projects.map(async p => {
+    await Promise.all(ps.map(async p => {
       try { (await api<Candidate[]>(`/projects/${p.id}/candidates`)).forEach(c => all.push({ ...c, project_title: p.title })); }
       catch { /* ignore project */ }
     }));
     setPeople(all.sort((a, b) => a.id - b.id));
   }); }, []);
+
+  // 新建候选人时默认归属第一个岗位 / 项目
+  useEffect(() => { if (projId === 0 && projects.length > 0) setProjId(projects[0].id); }, [projects, projId]);
+
+  // 年月快选浮层：点击外部或按 Esc 关闭
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const onDown = (e: MouseEvent) => { if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) setPickerOpen(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setPickerOpen(false); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [pickerOpen]);
 
   async function schedule(c: CalPerson, date: string | null) {
     await run(async () => {
@@ -842,6 +862,25 @@ function CalendarPage() {
         project_id: c.project_id, name: c.name, role: c.role, notes: c.notes ?? '', interview_date: date,
       }));
       setPeople(prev => prev.map(p => p.id === c.id ? { ...p, interview_date: saved.interview_date } : p));
+    });
+  }
+
+  // 直接新建候选人并安排到当前选中日（无需先上传简历）
+  async function createPerson(form: HTMLFormElement) {
+    const data = new FormData(form);
+    const name = String(data.get('name') || '').trim();
+    const role = String(data.get('role') || '').trim();
+    const notes = String(data.get('notes') || '').trim();
+    if (!name || !role || projId <= 0) return;
+    await run(async () => {
+      const created = await api<Candidate>('/candidates', json('POST', {
+        project_id: projId, name, role, notes, interview_date: selected,
+      }));
+      setPeople(prev => [...prev, { ...created, project_title: projects.find(p => p.id === projId)?.title }]
+        .sort((a, b) => a.id - b.id));
+      form.reset();
+      setShowCreate(false);
+      setAddId(0);
     });
   }
 
@@ -882,7 +921,33 @@ function CalendarPage() {
     <div className="calendar-layout">
       <div className="card cal-card">
         <div className="cal-toolbar">
-          <h2 className="cal-title">{cursor.y} 年 {cursor.m + 1} 月</h2>
+          <div className="cal-title-wrap" ref={pickerRef}>
+            <button type="button" className="cal-title-btn" aria-haspopup="dialog" aria-expanded={pickerOpen}
+              onClick={() => { setPickerYear(cursor.y); setPickerOpen(o => !o); }}>
+              {cursor.y} 年 {cursor.m + 1} 月
+              <svg className="cal-title-caret" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </button>
+            {pickerOpen && (
+              <div className="cal-mpop" role="dialog" aria-label="快速选择月份">
+                <div className="cal-mpop-head">
+                  <button type="button" className="secondary" aria-label="上一年" onClick={() => setPickerYear(y => y - 1)}>‹</button>
+                  <strong>{pickerYear} 年</strong>
+                  <button type="button" className="secondary" aria-label="下一年" onClick={() => setPickerYear(y => y + 1)}>›</button>
+                </div>
+                <div className="cal-mpop-grid">
+                  {Array.from({ length: 12 }, (_, m) => {
+                    const isCur = cursor.y === pickerYear && cursor.m === m;
+                    const isThisMonth = now.getFullYear() === pickerYear && now.getMonth() === m;
+                    return <button type="button" key={m}
+                      className={`cal-mpop-m${isCur ? ' is-cur' : ''}${isThisMonth && !isCur ? ' is-todaym' : ''}`}
+                      onClick={() => { setCursor({ y: pickerYear, m }); setPickerOpen(false); }}>
+                      {m + 1} 月
+                    </button>;
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
           <div className="cal-nav">
             <button type="button" className="secondary" aria-label="上一月" onClick={() => shiftMonth(-1)}>‹</button>
             <button type="button" className="secondary" onClick={() => { const t = new Date(); setCursor({ y: t.getFullYear(), m: t.getMonth() }); setSelected(todayKey()); }}>今天</button>
@@ -936,13 +1001,14 @@ function CalendarPage() {
           </div>
 
           <div className="cal-add">
+            <p className="cal-add-label">安排已有候选人</p>
             <AppleSelect<number>
               value={addId}
-              placeholder="添加候选人到这一天…"
-              options={people.map(p => ({
+              placeholder={people.length ? '选择候选人加到这一天…' : '还没有候选人，请在下方新建'}
+              options={people.filter(p => p.interview_date !== selected).map(p => ({
                 value: p.id,
                 label: p.name,
-                hint: p.interview_date && p.interview_date !== selected
+                hint: p.interview_date
                   ? `${p.role} · 已安排 ${p.interview_date.slice(5).replace('-', '/')}`
                   : p.role,
               }))}
@@ -953,6 +1019,40 @@ function CalendarPage() {
               }}
             />
           </div>
+
+          <div className="cal-create-wrap">
+            {!showCreate ? (
+              <button type="button" className="secondary cal-create-toggle" onClick={() => setShowCreate(true)}>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
+                新建候选人并安排到当天
+              </button>
+            ) : (
+              <form className="cal-create" onSubmit={e => { e.preventDefault(); void createPerson(e.currentTarget); }}>
+                <p className="cal-add-label">新建候选人 · 安排到 {selected.slice(5).replace('-', '/')}</p>
+                {projects.length === 0 ? (
+                  <p className="muted cal-no-proj">还没有岗位 / 项目，请先<a href="#/new/jd">新建一个岗位</a>。</p>
+                ) : <>
+                  <label>姓名<input name="name" required maxLength={100} autoFocus placeholder="候选人姓名" /></label>
+                  <label>应聘岗位<input name="role" required maxLength={200} placeholder="例如：高级后端工程师" /></label>
+                  <div className="cal-field">
+                    <span className="cal-field-label">归属岗位 / 项目</span>
+                    <AppleSelect<number>
+                      value={projId}
+                      placeholder="选择归属岗位 / 项目"
+                      options={projects.map(p => ({ value: p.id, label: p.title }))}
+                      onChange={setProjId}
+                    />
+                  </div>
+                  <label>备注（可选）<textarea name="notes" rows={2} maxLength={10000} placeholder="联系方式、面试形式或其他备注" /></label>
+                  <div className="cal-create-actions">
+                    <button type="button" className="secondary" onClick={() => setShowCreate(false)}>取消</button>
+                    <button type="submit" disabled={busy || projId <= 0}>{busy ? '添加中…' : `添加到 ${selected.slice(5).replace('-', '/')}`}</button>
+                  </div>
+                </>}
+              </form>
+            )}
+          </div>
+
           <a className="button-link primary-link cal-goto" href={`#/app?date=${selected}`}>在工作台查看当天候选人 →</a>
         </div>
 

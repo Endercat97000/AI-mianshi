@@ -675,9 +675,47 @@ details[open] > summary { margin-bottom: 12px; border-bottom: 1px solid var(--ha
 }
 
 .calendar-layout { display: grid; grid-template-columns: minmax(0, 2.05fr) minmax(300px, 1fr); gap: 16px; align-items: start; }
+/* 日历是常驻工具面板，直接刷新/直达时也必须立即可见，不依赖入场动画 */
+.calendar-layout .card { animation: none; }
 .cal-card { padding: 20px 22px 22px; }
 .cal-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.cal-title { margin: 0; font-size: 20px; }
+/* 左上角年月：可点击，弹出月份快选 */
+.cal-title-wrap { position: relative; }
+.cal-title-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: transparent; color: var(--ink);
+  border: 1px solid transparent; border-radius: 10px;
+  padding: 5px 9px 5px 10px;
+  font-size: 20px; font-weight: 700; letter-spacing: -0.01em;
+  transition: background .16s var(--ease-out);
+}
+.cal-title-btn:hover { background: var(--surface-3); }
+.cal-title-btn:active { background: var(--border); }
+.cal-title-caret { width: 13px; height: 13px; color: var(--muted); transition: transform .22s var(--ease-spring), color .16s; }
+.cal-title-btn[aria-expanded="true"] .cal-title-caret { transform: rotate(180deg); color: var(--brand); }
+.cal-mpop {
+  position: absolute; top: calc(100% + 8px); left: 0; z-index: 70;
+  width: 276px; padding: 14px;
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: 18px; box-shadow: var(--shadow-lg);
+  transform-origin: top left; animation: cal-pop .16s var(--ease-spring) both;
+}
+/* 只做位移/缩放、不锁透明度：即使动画未推进，浮层也始终可见 */
+@keyframes cal-pop { from { transform: translateY(-3px) scale(.97); } to { transform: translateY(0) scale(1); } }
+.cal-mpop-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-mpop-head strong { font-size: 15px; font-weight: 600; }
+.cal-mpop-head button { width: 34px; height: 30px; padding: 0; border-radius: 9px; font-size: 16px; line-height: 1; }
+.cal-mpop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.cal-mpop-m {
+  background: var(--surface-2); color: var(--ink);
+  border-radius: 10px; padding: 9px 0; font-size: 13.5px; font-weight: 500;
+  transition: background .14s var(--ease-out), color .14s, transform .1s var(--ease-out);
+}
+.cal-mpop-m:hover { background: var(--brand-pale); color: var(--brand-deep); }
+.cal-mpop-m:active { transform: scale(.95); background: var(--brand-pale); }
+.cal-mpop-m.is-cur, .cal-mpop-m.is-cur:hover { background: var(--brand); color: #fff; font-weight: 600; }
+.cal-mpop-m.is-todaym { box-shadow: inset 0 0 0 1.5px var(--brand); color: var(--brand); }
+:root[data-theme="dark"] .cal-mpop-m:hover { color: #fff; }
 .cal-nav { display: flex; gap: 8px; }
 .cal-nav button { width: 38px; height: 34px; padding: 0; border-radius: 10px; font-size: 17px; line-height: 1; }
 .cal-nav button:nth-child(2) { width: auto; padding: 0 14px; font-size: 13.5px; }
@@ -730,8 +768,36 @@ details[open] > summary { margin-bottom: 12px; border-bottom: 1px solid var(--ha
 }
 .cal-day-actions { display: flex; gap: 6px; flex: 0 0 auto; }
 .cal-day-actions .button-link, .cal-day-actions button { padding: 6px 12px; font-size: 12.5px; }
-.cal-add { margin-bottom: 10px; }
+.cal-add { margin-bottom: 14px; }
 .cal-add .apple-select { margin-top: 0; }
+.cal-add-label { font-size: 12px; font-weight: 600; letter-spacing: .02em; color: var(--faint); margin: 0 0 7px; }
+
+/* 新建候选人（虚线幽灵按钮 → 展开内联表单） */
+.cal-create-wrap { margin-bottom: 14px; }
+.cal-create-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px;
+  background: transparent; color: var(--brand);
+  border: 1px dashed var(--brand); border-radius: 12px;
+  padding: 11px; font-size: 13.5px; font-weight: 500;
+}
+.cal-create-toggle:hover, .cal-create-toggle:active { background: var(--brand-pale); }
+.cal-create-toggle svg { width: 15px; height: 15px; }
+.cal-create {
+  background: var(--surface-2); border: 1px solid var(--hairline);
+  border-radius: 16px; padding: 14px;
+  animation: cal-reveal .16s var(--ease-spring) both;
+}
+@keyframes cal-reveal { from { transform: scale(.985); } to { transform: scale(1); } }
+.cal-create label { font-size: 13px; margin-bottom: 11px; }
+.cal-create input, .cal-create textarea { background: var(--surface); margin-top: 6px; }
+.cal-field-label { display: block; font-size: 13px; color: var(--ink); }
+.cal-field .apple-select { margin-top: 6px; margin-bottom: 11px; }
+.cal-create-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.cal-create-actions button { padding: 9px 18px; font-size: 13.5px; }
+.cal-create-actions .secondary { padding: 9px 16px; }
+.cal-no-proj { font-size: 13px; margin: 2px 0; }
+.cal-no-proj a { color: var(--brand); }
+
 .cal-goto { display: block; text-align: center; padding: 11px; font-size: 14px; }
 .cal-meta { padding: 16px 20px; }
 .cal-meta h3 { font-size: 14px; margin: 0 0 6px; }
