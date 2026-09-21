@@ -1,6 +1,6 @@
 /* ============================================================
-   AI 面试工作台 · Apple / iOS 风格设计令牌
-   圆角 · 毛玻璃 · 柔和层级阴影 · 系统字体
+   AI 面试工作台 · Apple.com.cn 官网设计令牌
+   大字留白 · 毛玻璃导航 · 白卡大圆角近无投影 · 官网蓝胶囊
    ============================================================ */
 :root {
   color-scheme: light;
@@ -8,46 +8,53 @@
   /* 背景与表面 */
   --page:      #f5f5f7;       /* 苹果官网浅灰 */
   --surface:   #ffffff;       /* 卡片白 */
-  --surface-2: #f0f0f2;       /* 内嵌面板 */
-  --sidebar:   rgba(245, 245, 247, 0.72); /* 毛玻璃侧栏 */
+  --surface-2: #f5f5f7;       /* 内嵌浅灰（官网中性按钮/输入） */
+  --surface-3: #ebebed;       /* 中性按钮 hover */
+  --sidebar:   rgba(255, 255, 255, 0.78); /* 毛玻璃导航/侧栏 */
+  --band:      #ffffff;       /* 全宽浅色区块 */
+  --band-alt:  #f5f5f7;       /* 交替浅灰区块 */
+  --band-dark: #1d1d1f;       /* 官网式全宽深色区块 */
 
   /* 文字 */
   --ink:       #1d1d1f;
+  --ink-invert:#f5f5f7;       /* 深色区块上的文字 */
   --muted:     #6e6e73;
-  --faint:     #a1a1a6;
+  --faint:     #86868b;
 
-  /* 边框（极细浅灰） */
+  /* 发丝分隔线 */
   --border:    #d2d2d7;
+  --hairline:  rgba(0, 0, 0, 0.08);
   --bw:        1px;
 
-  /* 品牌色（苹果蓝为主操作，保留绿色作品牌/成功） */
+  /* 品牌色（官网蓝为主操作） */
   --brand:        #0071e3;
+  --brand-hover:  #0077ed;
   --brand-deep:   #0058b0;
   --brand-pale:   #e8f1fd;
   --brand-wash:   #f4f9ff;
   --brand-softer: #eef6ff;
 
   /* 强调色 */
-  --accent:      #ffd60a;    /* iOS 黄 */
-  --danger:      #ff3b30;    /* iOS 红 */
+  --accent:      #ffd60a;
+  --danger:      #ff3b30;
   --danger-pale: #ffeceb;
-  --success:     #34c759;    /* iOS 绿 */
-  --info:        #5ac8fa;    /* iOS 浅蓝 */
+  --success:     #34c759;
+  --info:        #5ac8fa;
   --info-pale:   #e9f8ff;
 
-  /* 柔和层级阴影 */
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.05);
-  --shadow:    0 2px 8px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.04);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,.10), 0 4px 12px rgba(0,0,0,.06);
-  --shadow-brand: 0 4px 14px rgba(0,113,227,.28);
+  /* 官网级轻柔投影（卡片近乎无投影） */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+  --shadow:    0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 18px 48px rgba(0,0,0,.12), 0 6px 16px rgba(0,0,0,.06);
+  --shadow-brand: 0 6px 18px rgba(0,113,227,.22);
 
-  /* 圆角 */
-  --r-sm: 8px;
-  --r:    12px;
-  --r-lg: 18px;
+  /* 圆角（官网 tile 偏大） */
+  --r-sm: 10px;
+  --r:    16px;
+  --r-lg: 22px;
   --r-pill: 980px;
 
-  /* 苹果风格动效曲线 */
+  /* 官网动效曲线：安静、快速、可中断 */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-in-out: cubic-bezier(0.45, 0, 0.15, 1);
@@ -57,17 +64,24 @@
   color-scheme: dark;
 
   --page:      #000000;
-  --surface:   #1c1c1e;
+  --surface:   #1d1d1f;
   --surface-2: #2c2c2e;
-  --sidebar:   rgba(22, 22, 24, 0.72);
+  --surface-3: #3a3a3c;
+  --sidebar:   rgba(20, 20, 22, 0.78);
+  --band:      #000000;
+  --band-alt:  #0a0a0c;
+  --band-dark: #161617;
 
   --ink:       #f5f5f7;
+  --ink-invert:#f5f5f7;
   --muted:     #98989d;
-  --faint:     #636366;
+  --faint:     #6e6e73;
 
   --border:    #38383a;
+  --hairline:  rgba(255, 255, 255, 0.10);
 
-  --brand:        #0a84ff;    /* iOS dark 蓝 */
+  --brand:        #0a84ff;
+  --brand-hover:  #2997ff;
   --brand-deep:   #409cff;
   --brand-pale:   #0a2540;
   --brand-wash:   #0c1d33;
@@ -80,8 +94,8 @@
   --info:        #64d2ff;
   --info-pale:   #0c2f3d;
 
-  --shadow-sm: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.4);
-  --shadow:    0 2px 8px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,.6), 0 4px 12px rgba(0,0,0,.4);
-  --shadow-brand: 0 4px 14px rgba(10,132,255,.35);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
+  --shadow:    0 4px 16px rgba(0,0,0,.45);
+  --shadow-lg: 0 18px 48px rgba(0,0,0,.65), 0 6px 16px rgba(0,0,0,.4);
+  --shadow-brand: 0 6px 18px rgba(10,132,255,.30);
 }

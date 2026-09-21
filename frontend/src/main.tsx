@@ -71,6 +71,17 @@ function PixelField() {
    落地页（#/，无侧边栏，复古粗野风格）
    ============================================================ */
 function LandingPage({ dark, onToggleTheme }: { dark: boolean; onToggleTheme: () => void }) {
+  // 官网式滚动渐入：元素进入视口后安静上浮
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+    if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(e => io.observe(e));
+    return () => io.disconnect();
+  }, []);
+
   return <div className="landing">
     <PixelField />
     <nav className="landing-nav">
@@ -79,9 +90,9 @@ function LandingPage({ dark, onToggleTheme }: { dark: boolean; onToggleTheme: ()
         <span>AI 面试工作台</span>
       </a>
       <div className="nav-links">
+        <a href="#how">工作流程</a>
+        <a href="#features">核心能力</a>
         <a href="#/app">工作台</a>
-        <a href="#/skills">出题规则</a>
-        <a href="#/settings">设置</a>
         <button className="secondary" onClick={onToggleTheme}>{dark ? '☀ 浅色' : '☾ 深色'}</button>
       </div>
     </nav>
@@ -94,34 +105,84 @@ function LandingPage({ dark, onToggleTheme }: { dark: boolean; onToggleTheme: ()
         所有数据留在本机，面试官掌握节奏。
       </p>
       <div className="cta-row">
-        <a className="cta" href="#/app">进入工作台 →</a>
+        <a className="cta" href="#/app">进入工作台</a>
+        <a className="cta alt" href="#how">了解功能</a>
       </div>
     </section>
 
-    <section className="landing-section">
-      <h2>面试五步流程</h2>
-      <div className="steps">
-        <div className="step" style={{ ['--i' as any]: 0 }}><span className="num">01</span><h4>建项目 / JD</h4><p>描述项目需求或粘贴岗位 JD，明确考察方向。</p></div>
-        <div className="step" style={{ ['--i' as any]: 1 }}><span className="num">02</span><h4>导入简历</h4><p>批量上传 PDF/DOCX/TXT，一份文件对应一位候选人。</p></div>
-        <div className="step" style={{ ['--i' as any]: 2 }}><span className="num">03</span><h4>生成提纲</h4><p>基于简历与岗位知识，AI 输出问题、声明与待确认点。</p></div>
-        <div className="step" style={{ ['--i' as any]: 3 }}><span className="num">04</span><h4>进行面试</h4><p>逐题记录回答，模型给出引用与追问建议，面试官拍板。</p></div>
-        <div className="step" style={{ ['--i' as any]: 4 }}><span className="num">05</span><h4>证据报告</h4><p>汇总回答、人工复核与原文引用，导出 Markdown。</p></div>
+    <section className="landing-section dark-band" id="how">
+      <div className="section-inner">
+        <div className="section-head reveal">
+          <h2>五步，完成一场结构化面试</h2>
+          <p>从岗位需求到证据报告，一条清晰、可追溯的面试流水线。</p>
+        </div>
+        <div className="steps">
+          <div className="step reveal" style={{ ['--i' as any]: 0 }}><span className="num">01</span><h4>建项目 / JD</h4><p>描述项目需求或粘贴岗位 JD，明确考察方向。</p></div>
+          <div className="step reveal" style={{ ['--i' as any]: 1 }}><span className="num">02</span><h4>导入简历</h4><p>批量上传 PDF/DOCX/TXT，一份文件对应一位候选人。</p></div>
+          <div className="step reveal" style={{ ['--i' as any]: 2 }}><span className="num">03</span><h4>生成提纲</h4><p>基于简历与岗位知识，AI 输出问题、声明与待确认点。</p></div>
+          <div className="step reveal" style={{ ['--i' as any]: 3 }}><span className="num">04</span><h4>进行面试</h4><p>逐题记录回答，模型给出引用与追问建议，面试官拍板。</p></div>
+          <div className="step reveal" style={{ ['--i' as any]: 4 }}><span className="num">05</span><h4>证据报告</h4><p>汇总回答、人工复核与原文引用，导出 Markdown。</p></div>
+        </div>
       </div>
     </section>
 
-    <section className="landing-section">
-      <h2>核心能力</h2>
-      <div className="feature-grid">
-        <div className="feature"><div className="ico" aria-hidden="true">📄</div><h3>简历本地解析</h3><p>PDF / DOCX / TXT 自动提取文本，字段完整度修复。</p></div>
-        <div className="feature"><div className="ico" aria-hidden="true">🎯</div><h3>提纲生成</h3><p>按能力要求生成问题、简历声明与待确认清单。</p></div>
-        <div className="feature"><div className="ico" aria-hidden="true">🔍</div><h3>回答引用分析</h3><p>模型定位回答原文，给出支持 / 矛盾 / 证据不足判断。</p></div>
-        <div className="feature"><div className="ico" aria-hidden="true">📚</div><h3>出题规则</h3><p>AI 出题时参考的规则模板，可选择项目需求、后端知识、竞赛分析。</p></div>
-        <div className="feature"><div className="ico" aria-hidden="true">🛡</div><h3>隐私脱敏</h3><p>姓名、手机、邮箱、身份证发送前自动替换。</p></div>
-        <div className="feature"><div className="ico" aria-hidden="true">📊</div><h3>证据报告</h3><p>原文、回答、人工复核分层标注，不混为"已核实事实"。</p></div>
+    <section className="landing-section feature-band" id="features">
+      <div className="section-inner">
+        <div className="section-head reveal">
+          <h2>为面试官准备的核心能力</h2>
+          <p>AI 负责整理与提示，判断与节奏始终在你手里。</p>
+        </div>
+        <div className="feature-grid">
+          <div className="feature reveal" style={{ ['--i' as any]: 0 }}><div className="ico" aria-hidden="true">📄</div><h3>简历本地解析</h3><p>PDF / DOCX / TXT 自动提取文本，自动识别姓名与工作年限。</p></div>
+          <div className="feature reveal" style={{ ['--i' as any]: 1 }}><div className="ico" aria-hidden="true">🎯</div><h3>提纲生成</h3><p>按能力要求生成问题、简历声明与待确认清单。</p></div>
+          <div className="feature reveal" style={{ ['--i' as any]: 2 }}><div className="ico" aria-hidden="true">🔍</div><h3>回答引用分析</h3><p>模型定位回答原文，给出支持 / 矛盾 / 证据不足判断。</p></div>
+          <div className="feature reveal" style={{ ['--i' as any]: 3 }}><div className="ico" aria-hidden="true">📚</div><h3>出题规则</h3><p>AI 出题时参考的规则模板，可按岗位自行上传与扩展。</p></div>
+          <div className="feature reveal" style={{ ['--i' as any]: 4 }}><div className="ico" aria-hidden="true">🛡</div><h3>隐私脱敏</h3><p>姓名、手机、邮箱、身份证在发送前自动替换。</p></div>
+          <div className="feature reveal" style={{ ['--i' as any]: 5 }}><div className="ico" aria-hidden="true">📊</div><h3>证据报告</h3><p>原文、回答、人工复核分层标注，不混为“已核实事实”。</p></div>
+        </div>
       </div>
     </section>
 
-    <footer>本地面试辅助系统 · 数据不出本机 · 由面试官掌握节奏</footer>
+    <footer className="site-footer">
+      <div className="footer-inner">
+        <div className="footer-cols">
+          <div>
+            <h5>产品</h5>
+            <a href="#/app">工作台</a>
+            <a href="#/new/jd">新建岗位 / JD</a>
+            <a href="#/skills">出题规则</a>
+            <a href="#/settings">设置</a>
+          </div>
+          <div>
+            <h5>面试流程</h5>
+            <a href="#how">建项目 / JD</a>
+            <a href="#how">导入简历</a>
+            <a href="#how">生成提纲</a>
+            <a href="#how">证据报告</a>
+          </div>
+          <div>
+            <h5>能力</h5>
+            <a href="#features">简历本地解析</a>
+            <a href="#features">回答引用分析</a>
+            <a href="#features">隐私脱敏</a>
+            <a href="#features">证据报告</a>
+          </div>
+          <div>
+            <h5>关于</h5>
+            <span className="muted" style={{ fontSize: 12, display: 'block', padding: '3px 0' }}>本地优先部署</span>
+            <span className="muted" style={{ fontSize: 12, display: 'block', padding: '3px 0' }}>数据不出本机</span>
+            <span className="muted" style={{ fontSize: 12, display: 'block', padding: '3px 0' }}>面试官掌握节奏</span>
+          </div>
+        </div>
+        <p className="footer-note">本地面试辅助系统：简历解析、提纲生成与回答分析均在你的设备上完成；调用模型前可开启自动脱敏。界面设计语言参考 Apple 官网，为独立第三方作品。</p>
+        <div className="footer-bottom">
+          <span>Copyright © 2026 AI 面试工作台. 保留所有权利。</span>
+          <a href="#/settings">隐私</a>
+          <a href="#/settings">使用条款</a>
+          <span>LOCAL-FIRST · v0.1</span>
+        </div>
+      </div>
+    </footer>
   </div>;
 }
 
