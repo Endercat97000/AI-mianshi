@@ -233,6 +233,90 @@ function LandingPage({ dark, onToggleTheme }: { dark: boolean; onToggleTheme: ()
 }
 
 /* ============================================================
+   苹果风自定义下拉（AppleSelect）
+   - 闭合态：浅灰圆角触发器 + SF 风 chevron，聚焦蓝边光晕
+   - 展开态：白色浮层菜单、轻投影、当前项对勾、淡入缩放
+   - 键盘可达：Enter/Space/↑↓ 选择，Esc/Tab 收起；点击外部关闭
+   ============================================================ */
+type AppleSelectOption<T extends string | number> = { value: T; label: string; hint?: string };
+function AppleSelect<T extends string | number>({ value, options, onChange, placeholder, disabled }: {
+  value: T;
+  options: AppleSelectOption<T>[];
+  onChange: (value: T) => void;
+  placeholder?: string;
+  disabled?: boolean;
+}) {
+  const uid = React.useId();
+  const [open, setOpen] = useState(false);
+  const [hi, setHi] = useState(0);
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const selectedIndex = Math.max(0, options.findIndex(o => o.value === value));
+  const current = options[selectedIndex];
+
+  React.useEffect(() => {
+    if (!open) return;
+    setHi(selectedIndex);
+    const onDown = (e: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  React.useEffect(() => {
+    if (!open) return;
+    rootRef.current?.querySelector<HTMLElement>(`[data-i="${hi}"]`)?.scrollIntoView({ block: 'nearest' });
+  }, [hi, open]);
+
+  function choose(i: number) {
+    const o = options[i];
+    if (o) { onChange(o.value); setOpen(false); }
+  }
+  function onKey(e: React.KeyboardEvent) {
+    if (!open) {
+      if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(e.key)) { e.preventDefault(); setOpen(true); }
+      return;
+    }
+    if (e.key === 'ArrowDown') { e.preventDefault(); setHi(h => Math.min(options.length - 1, h + 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setHi(h => Math.max(0, h - 1)); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(hi); }
+    else if (e.key === 'Escape' || e.key === 'Tab') { setOpen(false); }
+    else if (e.key === 'Home') { e.preventDefault(); setHi(0); }
+    else if (e.key === 'End') { e.preventDefault(); setHi(options.length - 1); }
+  }
+
+  return (
+    <div className={`apple-select${open ? ' is-open' : ''}`} ref={rootRef}>
+      <button type="button" className="as-trigger" disabled={disabled}
+        aria-haspopup="listbox" aria-expanded={open} aria-controls={`${uid}-menu`}
+        aria-activedescendant={open ? `${uid}-opt-${hi}` : undefined}
+        onClick={() => { if (!disabled) setOpen(o => !o); }} onKeyDown={onKey}>
+        <span className={`as-value${current ? '' : ' is-ph'}`}>{current ? current.label : (placeholder || '请选择')}</span>
+        <svg className="as-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </button>
+      {open && (
+        <div className="as-menu" id={`${uid}-menu`} role="listbox" tabIndex={-1}>
+          {options.length === 0 && <div className="as-empty">暂无可选项</div>}
+          {options.map((o, i) => (
+            <button type="button" role="option" id={`${uid}-opt-${i}`} data-i={i} key={String(o.value)}
+              aria-selected={o.value === value}
+              className={`as-opt${o.value === value ? ' is-sel' : ''}${i === hi ? ' is-hi' : ''}`}
+              onMouseEnter={() => setHi(i)} onClick={() => choose(i)}>
+              <span className="as-opt-text">
+                <span className="as-opt-label">{o.label}</span>
+                {o.hint && <span className="as-opt-hint">{o.hint}</span>}
+              </span>
+              {o.value === value && <svg className="as-check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6 6.6 12 13 4.6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
    工作台首页的智能上传入口（自动选项目，没项目自动建）
    ============================================================ */
 function DashboardUpload({ onDone }: { onDone: () => void }) {
@@ -297,10 +381,12 @@ function DashboardUpload({ onDone }: { onDone: () => void }) {
     <p className="muted">支持 PDF / DOCX / TXT，单文件最大 20 MB。系统本地解析后自动从简历文本里提取姓名和工作年限，预填到候选人档案。</p>
     <div className="grid">
       <label>目标项目
-        <select value={projectId} onChange={e => setProjectId(Number(e.target.value))}>
-          {projects.length === 0 && <option value={0}>（自动创建"简历导入"项目）</option>}
-          {projects.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
-        </select>
+        <AppleSelect<number>
+          value={projectId}
+          placeholder="自动创建“简历导入”项目"
+          options={projects.map(p => ({ value: p.id, label: p.title }))}
+          onChange={setProjectId}
+        />
       </label>
       <label>应聘岗位（可选）
         <input value={role} maxLength={200} placeholder="例如：后端工程师" onChange={e => setRole(e.target.value)} />
@@ -665,9 +751,14 @@ function SettingsPage() {
     {settings && <>
       <form className="card" onSubmit={e => { e.preventDefault(); setMessage(''); void run(async () => { const saved = await api<Settings>('/settings', json('PUT', { provider: settings.provider, base_url: settings.base_url, model: settings.model, api_key: clearKey ? '' : key || null })); setSettings(saved); setKey(''); setClearKey(false); setMessage('设置已保存。'); }); }}>
         <label>AI Provider
-          <select value={settings.provider} onChange={e => { const provider = e.target.value; setSettings({ ...settings, provider, base_url: provider === 'deepseek' ? 'https://api.deepseek.com' : provider === 'ollama' ? 'http://127.0.0.1:11434/v1' : settings.base_url, model: provider === 'deepseek' ? 'deepseek-flash' : provider === 'ollama' ? '' : settings.model }); }}>
-            {['openai', 'deepseek', 'openrouter', 'ollama', 'custom'].map(p => <option key={p} value={p}>{({ openai: 'OpenAI', deepseek: 'DeepSeek', openrouter: 'OpenRouter', ollama: 'Ollama', custom: 'Custom OpenAI-Compatible API' } as Record<string, string>)[p]}</option>)}
-          </select>
+          <AppleSelect<string>
+            value={settings.provider}
+            options={(['openai', 'deepseek', 'openrouter', 'ollama', 'custom'] as const).map(p => ({
+              value: p as string,
+              label: ({ openai: 'OpenAI', deepseek: 'DeepSeek', openrouter: 'OpenRouter', ollama: 'Ollama', custom: 'Custom OpenAI-Compatible API' } as Record<string, string>)[p],
+            }))}
+            onChange={provider => setSettings({ ...settings, provider, base_url: provider === 'deepseek' ? 'https://api.deepseek.com' : provider === 'ollama' ? 'http://127.0.0.1:11434/v1' : settings.base_url, model: provider === 'deepseek' ? 'deepseek-flash' : provider === 'ollama' ? '' : settings.model })}
+          />
         </label>
         <label>Base URL<input type="url" maxLength={2000} value={settings.base_url} placeholder="https://example.com/v1" onChange={e => setSettings({ ...settings, base_url: e.target.value })} /></label>
         <label>API Key<input type="password" autoComplete="new-password" maxLength={4000} disabled={clearKey} value={key} placeholder={settings.has_api_key ? '已保存；留空保留原密钥' : '可选，尚未保存'} onChange={e => setKey(e.target.value)} /></label>

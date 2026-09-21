@@ -208,6 +208,68 @@ input::placeholder, textarea::placeholder { color: var(--faint); }
 .check { display: flex; align-items: center; gap: 8px; font-weight: 400; }
 .check input { width: 18px; height: 18px; margin: 0; accent-color: var(--brand); }
 
+/* ---------- 苹果风自定义下拉（AppleSelect） ---------- */
+.apple-select { position: relative; margin-top: 7px; }
+
+.as-trigger {
+  width: 100%; min-height: 44px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface-2); color: var(--ink);
+  border: 1px solid transparent; border-radius: 12px;
+  font: inherit; font-size: 15px; font-weight: 400; letter-spacing: -0.01em;
+  text-align: left; box-shadow: none;
+  transition: background .16s var(--ease-out), box-shadow .16s var(--ease-out),
+             border-color .16s var(--ease-out), transform .12s var(--ease-out);
+}
+.as-trigger:hover:not(:disabled) { background: var(--surface-3); }
+.as-trigger:active:not(:disabled) { transform: scale(.997); }
+.as-trigger:focus-visible { outline: none; }
+.apple-select.is-open .as-trigger,
+.as-trigger:focus-visible {
+  background: var(--surface);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, .15);
+}
+:root[data-theme="dark"] .apple-select.is-open .as-trigger,
+:root[data-theme="dark"] .as-trigger:focus-visible { box-shadow: 0 0 0 4px rgba(10, 132, 255, .26); }
+
+.as-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.as-value.is-ph { color: var(--faint); }
+.as-chevron {
+  flex: 0 0 auto; width: 12px; height: 12px; color: var(--faint);
+  transition: transform .24s var(--ease-spring), color .16s;
+}
+.apple-select.is-open .as-chevron { transform: rotate(180deg); color: var(--brand); }
+
+.as-menu {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 60;
+  max-height: 268px; overflow-y: auto; overscroll-behavior: contain;
+  padding: 6px; background: var(--surface);
+  border: 1px solid var(--hairline); border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  transform-origin: top center; animation: as-pop .16s var(--ease-spring) both;
+}
+@keyframes as-pop {
+  from { opacity: 0; transform: translateY(-4px) scale(.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.as-empty { padding: 10px 12px; font-size: 13.5px; color: var(--faint); }
+
+.as-opt {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  background: transparent; color: var(--ink);
+  font: inherit; font-size: 14.5px; font-weight: 400; text-align: left; box-shadow: none;
+  transition: background .12s var(--ease-out);
+}
+.as-opt.is-hi, .as-opt:hover { background: var(--brand-pale); }
+.as-opt-text { display: flex; flex-direction: column; min-width: 0; }
+.as-opt-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.as-opt-hint { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.as-opt.is-sel { font-weight: 600; }
+.as-check { flex: 0 0 auto; width: 15px; height: 15px; color: var(--brand); }
+
 /* ---------- 按钮（官网胶囊，安静不放大） ---------- */
 button {
   font: inherit; font-weight: 400; font-size: 15px; letter-spacing: -0.01em;
