@@ -98,16 +98,17 @@ function LandingPage({ dark, onToggleTheme }: { dark: boolean; onToggleTheme: ()
     </nav>
 
     <section className="landing-hero">
-      <span className="tag">LOCAL-FIRST · 2026</span>
       <h1>结构化面试<br/>从<span className="hl">简历</span>到<span className="hl">证据报告</span></h1>
       <p className="sub">
-        以项目 / JD 为中心的本地面试辅助系统：导入简历、生成面试提纲、逐题记录与分析、产出可追溯的证据报告。
-        所有数据留在本机，面试官掌握节奏。
+        准备提纲、记录回答、核对证据，都在同一个安静的工作台里完成。<br/>数据留在你的电脑上，面试的节奏始终由你掌握。
       </p>
       <div className="cta-row">
         <a className="cta" href="#/app">进入工作台</a>
         <a className="cta alt" href="#how">了解功能</a>
       </div>
+      <a className="hero-shot reveal" href="#/app" aria-label="进入工作台查看完整界面">
+        <img src="/shots/dashboard.png" alt="AI 面试工作台界面：简历上传、候选人与岗位管理一览" loading="eager" />
+      </a>
     </section>
 
     <section className="landing-section dark-band" id="how">
@@ -126,6 +127,33 @@ function LandingPage({ dark, onToggleTheme }: { dark: boolean; onToggleTheme: ()
       </div>
     </section>
 
+    <section className="landing-section promo-band" id="product">
+      <div className="section-inner">
+        <div className="promo-grid">
+          <article className="promo-tile reveal">
+            <div className="promo-media is-resume">
+              <img src="/shots/resume.png" alt="简历解析文本预览，手机号已自动脱敏" loading="lazy" />
+            </div>
+            <div className="promo-body">
+              <h3>拖入简历，自动读懂候选人</h3>
+              <p>本地解析 PDF、DOCX、TXT，提取文本、识别姓名与工作年限；手机号等敏感信息在调用模型前先脱敏。</p>
+              <a className="text-link" href="#/app">上传一份简历 ›</a>
+            </div>
+          </article>
+          <article className="promo-tile reveal" style={{ ['--i' as any]: 1 }}>
+            <div className="promo-media is-rules">
+              <img src="/shots/skills.png" alt="岗位出题规则模板内容" loading="lazy" />
+            </div>
+            <div className="promo-body">
+              <h3>按岗位定制出题规则</h3>
+              <p>把岗位考察点写成可复用的规则模板，AI 据此生成提纲与追问，问题始终围绕你真正在意的能力。</p>
+              <a className="text-link" href="#/skills">查看出题规则 ›</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section className="landing-section feature-band" id="features">
       <div className="section-inner">
         <div className="section-head reveal">
@@ -133,12 +161,30 @@ function LandingPage({ dark, onToggleTheme }: { dark: boolean; onToggleTheme: ()
           <p>AI 负责整理与提示，判断与节奏始终在你手里。</p>
         </div>
         <div className="feature-grid">
-          <div className="feature reveal" style={{ ['--i' as any]: 0 }}><div className="ico" aria-hidden="true">📄</div><h3>简历本地解析</h3><p>PDF / DOCX / TXT 自动提取文本，自动识别姓名与工作年限。</p></div>
-          <div className="feature reveal" style={{ ['--i' as any]: 1 }}><div className="ico" aria-hidden="true">🎯</div><h3>提纲生成</h3><p>按能力要求生成问题、简历声明与待确认清单。</p></div>
-          <div className="feature reveal" style={{ ['--i' as any]: 2 }}><div className="ico" aria-hidden="true">🔍</div><h3>回答引用分析</h3><p>模型定位回答原文，给出支持 / 矛盾 / 证据不足判断。</p></div>
-          <div className="feature reveal" style={{ ['--i' as any]: 3 }}><div className="ico" aria-hidden="true">📚</div><h3>出题规则</h3><p>AI 出题时参考的规则模板，可按岗位自行上传与扩展。</p></div>
-          <div className="feature reveal" style={{ ['--i' as any]: 4 }}><div className="ico" aria-hidden="true">🛡</div><h3>隐私脱敏</h3><p>姓名、手机、邮箱、身份证在发送前自动替换。</p></div>
-          <div className="feature reveal" style={{ ['--i' as any]: 5 }}><div className="ico" aria-hidden="true">📊</div><h3>证据报告</h3><p>原文、回答、人工复核分层标注，不混为“已核实事实”。</p></div>
+          <div className="feature reveal" style={{ ['--i' as any]: 0 }}>
+            <div className="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6M9 9h1"/></svg></div>
+            <h3>简历本地解析</h3><p>PDF / DOCX / TXT 自动提取文本，识别姓名与工作年限。</p>
+          </div>
+          <div className="feature reveal" style={{ ['--i' as any]: 1 }}>
+            <div className="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5 5.8 8.3 9 5"/><path d="M4 14.5 5.8 16.3 9 13"/><path d="M12.5 8H20M12.5 16H20"/></svg></div>
+            <h3>提纲生成</h3><p>按能力要求生成问题、简历声明与待确认清单。</p>
+          </div>
+          <div className="feature reveal" style={{ ['--i' as any]: 2 }}>
+            <div className="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/><path d="m8.6 11 1.8 1.8 3.6-3.6"/></svg></div>
+            <h3>回答引用分析</h3><p>模型定位回答原文，给出支持 / 矛盾 / 证据不足判断。</p>
+          </div>
+          <div className="feature reveal" style={{ ['--i' as any]: 3 }}>
+            <div className="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/><path d="M8 7.5h8M8 10.5h6"/></svg></div>
+            <h3>出题规则</h3><p>AI 出题时参考的规则模板，可按岗位自行上传与扩展。</p>
+          </div>
+          <div className="feature reveal" style={{ ['--i' as any]: 4 }}>
+            <div className="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.8-7 9-4-1.2-7-4.4-7-9V6z"/><path d="m9 11.5 2 2 4-4"/></svg></div>
+            <h3>隐私脱敏</h3><p>姓名、手机、邮箱、身份证在发送前自动替换。</p>
+          </div>
+          <div className="feature reveal" style={{ ['--i' as any]: 5 }}>
+            <div className="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/></svg></div>
+            <h3>证据报告</h3><p>原文、回答、人工复核分层标注，不混为“已核实事实”。</p>
+          </div>
         </div>
       </div>
     </section>
