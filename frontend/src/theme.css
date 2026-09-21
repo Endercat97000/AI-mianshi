@@ -33,6 +33,9 @@
   --brand-pale:   #e8f1fd;
   --brand-wash:   #f4f9ff;
   --brand-softer: #eef6ff;
+  --on-brand:     #ffffff;        /* 实心品牌按钮上的文字/图标色 */
+  --brand-ring:   rgba(0,113,227,.16);  /* 输入聚焦光晕 */
+  --brand-glow:   rgba(0,113,227,.42);  /* 大面积品牌光晕 */
 
   /* 强调色 */
   --accent:      #ffd60a;
@@ -86,6 +89,9 @@
   --brand-pale:   #0a2540;
   --brand-wash:   #0c1d33;
   --brand-softer: #10294a;
+  --on-brand:     #ffffff;
+  --brand-ring:   rgba(10,132,255,.28);
+  --brand-glow:   rgba(10,132,255,.50);
 
   --accent:      #ffd60a;
   --danger:      #ff453a;
@@ -98,4 +104,60 @@
   --shadow:    0 4px 16px rgba(0,0,0,.45);
   --shadow-lg: 0 18px 48px rgba(0,0,0,.65), 0 6px 16px rgba(0,0,0,.4);
   --shadow-brand: 0 6px 18px rgba(10,132,255,.30);
+}
+
+/* ============================================================
+   个性化强调色主题（与明/暗模式正交；data-accent 挂在 <html>）
+   经典蓝为默认（不设 data-accent 时）。每套覆盖品牌色系列、
+   实心按钮文字色 --on-brand、聚焦环与光晕。
+   ============================================================ */
+
+/* ---------- 樱花粉（浅色） ---------- */
+:root[data-accent="pink"] {
+  --brand: #e0447f; --brand-hover: #ec6297; --brand-deep: #b02a60;
+  --brand-pale: #fce7f0; --brand-wash: #fef2f7; --brand-softer: #fdeaf3;
+  --on-brand: #ffffff;
+  --brand-ring: rgba(224,68,127,.18); --brand-glow: rgba(224,68,127,.42);
+  --shadow-brand: 0 6px 18px rgba(224,68,127,.22);
+}
+/* ---------- 神秘黑（浅色）：墨黑胶囊 ---------- */
+:root[data-accent="black"] {
+  --brand: #1d1d1f; --brand-hover: #3a3a3c; --brand-deep: #000000;
+  --brand-pale: #e9e9ec; --brand-wash: #f4f4f6; --brand-softer: #efeff1;
+  --on-brand: #ffffff;
+  --brand-ring: rgba(0,0,0,.16); --brand-glow: rgba(0,0,0,.40);
+  --shadow-brand: 0 6px 18px rgba(0,0,0,.22);
+}
+/* ---------- 香槟黄（浅色）：金底深色字 ---------- */
+:root[data-accent="gold"] {
+  --brand: #c2901a; --brand-hover: #d3a533; --brand-deep: #86620f;
+  --brand-pale: #f8eed6; --brand-wash: #fdf8ea; --brand-softer: #faf2db;
+  --on-brand: #1d1d1f;
+  --brand-ring: rgba(194,144,26,.22); --brand-glow: rgba(194,144,26,.42);
+  --shadow-brand: 0 6px 18px rgba(194,144,26,.24);
+}
+
+/* ---------- 樱花粉（深色） ---------- */
+:root[data-theme="dark"][data-accent="pink"] {
+  --brand: #e84d8a; --brand-hover: #f068a0; --brand-deep: #ff96bd;
+  --brand-pale: #3a1626; --brand-wash: #2a101b; --brand-softer: #331320;
+  --on-brand: #ffffff;
+  --brand-ring: rgba(232,77,138,.28); --brand-glow: rgba(232,77,138,.50);
+  --shadow-brand: 0 6px 18px rgba(232,77,138,.30);
+}
+/* ---------- 神秘黑（深色）：深色界面里用近白胶囊 + 深色字 ---------- */
+:root[data-theme="dark"][data-accent="black"] {
+  --brand: #f5f5f7; --brand-hover: #ffffff; --brand-deep: #d2d2d7;
+  --brand-pale: #2c2c2e; --brand-wash: #1c1c1e; --brand-softer: #232325;
+  --on-brand: #1d1d1f;
+  --brand-ring: rgba(255,255,255,.22); --brand-glow: rgba(255,255,255,.45);
+  --shadow-brand: 0 6px 18px rgba(255,255,255,.16);
+}
+/* ---------- 香槟黄（深色）：亮金胶囊 + 深色字 ---------- */
+:root[data-theme="dark"][data-accent="gold"] {
+  --brand: #ecc24b; --brand-hover: #f3d06a; --brand-deep: #ffd60a;
+  --brand-pale: #33280f; --brand-wash: #241c0a; --brand-softer: #2b210d;
+  --on-brand: #1d1d1f;
+  --brand-ring: rgba(236,194,75,.28); --brand-glow: rgba(236,194,75,.50);
+  --shadow-brand: 0 6px 18px rgba(236,194,75,.28);
 }

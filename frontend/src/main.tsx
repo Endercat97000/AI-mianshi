@@ -756,7 +756,17 @@ function CandidatePage({ projectId, candidateId }: { projectId: number; candidat
   </>;
 }
 
-function SettingsPage() {
+const ACCENTS = [
+  { id: 'blue', name: '经典蓝' },
+  { id: 'pink', name: '樱花粉' },
+  { id: 'black', name: '神秘黑' },
+  { id: 'gold', name: '香槟黄' },
+] as const;
+type AccentId = typeof ACCENTS[number]['id'];
+
+function SettingsPage({ dark, onDark, accent, onAccent }: {
+  dark: boolean; onDark: (v: boolean) => void; accent: AccentId; onAccent: (a: AccentId) => void;
+}) {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [key, setKey] = useState('');
   const [clearKey, setClearKey] = useState(false);
@@ -767,6 +777,30 @@ function SettingsPage() {
     <h1>设置</h1>
     <p className="muted">保存模型配置后可测试连接。测试会发送一条不含候选人资料的短请求。</p>
     <ErrorMessage text={error} />
+    <section className="card">
+      <h2>个性化外观</h2>
+      <p className="appear-hint" style={{ marginBottom: 0 }}>选择浅色或深色模式，再挑一套主题强调色；按钮、链接与选中态会随之改变，偏好仅保存在本机。</p>
+      <div className="appear-section">
+        <p className="appear-label">外观模式</p>
+        <div className="seg" role="tablist" aria-label="外观模式">
+          <button type="button" role="tab" aria-selected={!dark} className={dark ? '' : 'is-active'} onClick={() => onDark(false)}>☀ 浅色</button>
+          <button type="button" role="tab" aria-selected={dark} className={dark ? 'is-active' : ''} onClick={() => onDark(true)}>☾ 深色</button>
+        </div>
+      </div>
+      <div className="appear-section">
+        <p className="appear-label">主题强调色</p>
+        <div className="theme-grid" role="radiogroup" aria-label="主题强调色">
+          {ACCENTS.map(a => (
+            <button type="button" role="radio" aria-checked={accent === a.id} key={a.id} data-t={a.id}
+              className={'theme-swatch' + (accent === a.id ? ' is-active' : '')}
+              onClick={() => onAccent(a.id)}>
+              <span className="theme-dot"><span className="theme-glyph">✓</span></span>
+              <span className="theme-name">{a.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
     {settings && <>
       <form className="card" onSubmit={e => { e.preventDefault(); setMessage(''); void run(async () => { const saved = await api<Settings>('/settings', json('PUT', { provider: settings.provider, base_url: settings.base_url, model: settings.model, api_key: clearKey ? '' : key || null })); setSettings(saved); setKey(''); setClearKey(false); setMessage('设置已保存。'); }); }}>
         <label>AI Provider
@@ -1070,11 +1104,20 @@ function CalendarPage() {
    ============================================================ */
 function App() {
   const [dark, setDark] = useState(() => document.documentElement.dataset.theme === 'dark');
+  const [accent, setAccent] = useState<AccentId>(() => {
+    let v: string | null = null;
+    try { v = localStorage.getItem('ai-interview-accent'); } catch { /* ignore */ }
+    return (ACCENTS.some(a => a.id === v) ? v : 'blue') as AccentId;
+  });
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('sidebar-collapsed') === '1');
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
     try { localStorage.setItem('ai-interview-theme', dark ? 'dark' : 'light'); } catch { /* ignore */ }
   }, [dark]);
+  useEffect(() => {
+    document.documentElement.dataset.accent = accent;
+    try { localStorage.setItem('ai-interview-accent', accent); } catch { /* ignore */ }
+  }, [accent]);
 
   const currentPath = () => (location.hash.slice(1) || '/').split('?')[0];
   const [route, setRoute] = useState(currentPath());
@@ -1098,7 +1141,7 @@ function App() {
     if (route === '/calendar') return ['面试日历', '按日期安排与查看'];
     if (route.startsWith('/new/project')) return ['新建项目', '定义项目需求'];
     if (route.startsWith('/new/jd')) return ['新建岗位', '撰写岗位 JD'];
-    if (route === '/settings') return ['设置', '模型与备份'];
+    if (route === '/settings') return ['设置', '个性化 · 模型 · 备份'];
     if (route === '/skills') return ['出题规则', 'AI 出题时参考的规则模板'];
     if (sessionMatch) return ['面试', `第 ${sessionMatch[1]} 场`];
     if (candidateMatch) return ['候选人档案', `#${candidateMatch[2]}`];
@@ -1167,7 +1210,7 @@ function App() {
           : route === '/calendar' ? <CalendarPage />
           : route === '/new/project' ? <NewProject kind="project" />
           : route === '/new/jd' ? <NewProject kind="jd" />
-          : route === '/settings' ? <SettingsPage />
+          : route === '/settings' ? <SettingsPage dark={dark} onDark={setDark} accent={accent} onAccent={setAccent} />
           : route === '/skills' ? <SkillsPage />
           : sessionMatch ? <InterviewPage id={Number(sessionMatch[1])} />
           : candidateMatch ? <CandidatePage projectId={Number(candidateMatch[1])} candidateId={Number(candidateMatch[2])} />
